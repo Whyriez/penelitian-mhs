@@ -68,9 +68,6 @@
                             <a href="{{ route('user.riwayat') }}" class="px-4 py-2 text-sm text-gray-600 hover:text-gray-800">
                                 Reset Filter
                             </a>
-                            <button id="export-btn" class="px-4 py-2 bg-green-600 text-white text-sm rounded-md hover:bg-green-700">
-                                Export PDF
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -103,7 +100,7 @@
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm">
                                         <button class="preview-btn text-blue-600 hover:text-blue-800 flex items-center"
-                                                data-file-url="{{ Storage::url($doc->file) }}"
+                                                data-file-url="{{ url('storage/' . str_replace('public/', '', $doc->file)) }}"
                                                 data-file-name="{{ $doc->nama }}">
                                             <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-.001.03-.002.06-.002.09a.097.097 0 01-.096.095 4.5 4.5 0 01-8.9 0 .097.097 0 01-.096-.095c0-.03.001-.06.002-.09z"></path></svg>
                                             Lihat
@@ -165,7 +162,7 @@
                                         <p>Tgl Upload: {{ $doc->tgl_upload ? \Carbon\Carbon::parse($doc->tgl_upload)->format('d M Y') : 'N/A' }}</p>
                                         <p>
                                             <button class="preview-btn text-blue-600 hover:text-blue-800 flex items-center"
-                                                    data-file-url="{{ Storage::url($doc->file) }}"
+                                                    data-file-url="{{ url('storage/' . str_replace('public/', '', $doc->file)) }}"
                                                     data-file-name="{{ $doc->nama }}">
                                                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-.001.03-.002.06-.002.09a.097.097 0 01-.096.095 4.5 4.5 0 01-8.9 0 .097.097 0 01-.096-.095c0-.03.001-.06.002-.09z"></path></svg>
                                                 Lihat File
@@ -242,42 +239,55 @@
     </style>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const previewModal = document.getElementById('preview-modal');
-            const closePreviewModal = document.getElementById('close-preview-modal');
-            const previewTitle = document.getElementById('preview-title');
-            const previewIframe = document.getElementById('preview-iframe');
+    document.addEventListener('DOMContentLoaded', function() {
+        const previewModal = document.getElementById('preview-modal');
+        const closePreviewModal = document.getElementById('close-preview-modal');
+        const previewTitle = document.getElementById('preview-title');
+        const previewIframe = document.getElementById('preview-iframe');
 
-            function openModal(fileUrl, fileName) {
-                previewTitle.textContent = fileName;
-                const viewerUrl = `{{ asset('pdfjs/web/viewer.html') }}?file=${encodeURIComponent(fileUrl)}`;
-                previewIframe.src = viewerUrl;
-                previewModal.classList.remove('hidden');
+        function openModal(fileUrl, fileName) {
+            previewTitle.textContent = fileName;
+            
+            // Konversi ke absolute URL jika masih relative
+            let fullUrl = fileUrl;
+            if (!fullUrl.startsWith('http')) {
+                fullUrl = window.location.origin + fullUrl;
             }
+            
+            // Debug - hapus setelah berhasil
+            console.log('Original URL:', fileUrl);
+            console.log('Full URL:', fullUrl);
+            
+            const viewerUrl = `{{ asset('pdfjs/web/viewer.html') }}?file=${encodeURIComponent(fullUrl)}`;
+            console.log('Viewer URL:', viewerUrl);
+            
+            previewIframe.src = viewerUrl;
+            previewModal.classList.remove('hidden');
+        }
 
-            function closeModal() {
-                previewModal.classList.add('hidden');
-                previewIframe.src = '';
+        function closeModal() {
+            previewModal.classList.add('hidden');
+            previewIframe.src = '';
+        }
+
+        document.body.addEventListener('click', function(e) {
+            const previewButton = e.target.closest('.preview-btn');
+            if (previewButton) {
+                e.preventDefault();
+                const fileUrl = previewButton.dataset.fileUrl;
+                const fileName = previewButton.dataset.fileName;
+                openModal(fileUrl, fileName);
             }
-
-            document.body.addEventListener('click', function(e) {
-                const previewButton = e.target.closest('.preview-btn');
-                if (previewButton) {
-                    e.preventDefault();
-                    const fileUrl = previewButton.dataset.fileUrl;
-                    const fileName = previewButton.dataset.fileName;
-                    openModal(fileUrl, fileName);
-                }
-            });
-
-            closePreviewModal.addEventListener('click', closeModal);
-            previewModal.addEventListener('click', (e) => {
-                if (e.target === previewModal) closeModal();
-            });
-
-            document.getElementById('status-filter').addEventListener('change', () => {
-                document.getElementById('filter-form').submit();
-            });
         });
-    </script>
+
+        closePreviewModal.addEventListener('click', closeModal);
+        previewModal.addEventListener('click', (e) => {
+            if (e.target === previewModal) closeModal();
+        });
+
+        document.getElementById('status-filter').addEventListener('change', () => {
+            document.getElementById('filter-form').submit();
+        });
+    });
+</script>
 @endsection

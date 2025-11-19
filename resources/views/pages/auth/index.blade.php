@@ -198,12 +198,8 @@
                         </div>
                         
                         <div class="flex justify-between items-center text-xs mt-3">
-                            <label for="remember" class="flex items-center text-gray-600 font-medium">
-                                <input type="checkbox" id="remember" name="remember" class="mr-2 h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
-                                Ingat saya
-                            </label>
-                            <a href="#" class="text-blue-600 hover:text-blue-800 font-medium transition-colors">
-                                Lupa Password?
+                            <a href="{{ route('auth.register') }}" class="text-blue-600 hover:text-blue-800 font-medium transition-colors">
+                                Daftar Akun Baru
                             </a>
                         </div>
 
