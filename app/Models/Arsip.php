@@ -21,6 +21,11 @@ class Arsip extends Model
         'catatan_revisi',
     ];
 
+    protected $casts = [
+        'file' => 'array', // Otomatis convert JSON <-> Array
+        'tgl_upload' => 'date',
+    ];
+
 
     public function user(): BelongsTo
     {

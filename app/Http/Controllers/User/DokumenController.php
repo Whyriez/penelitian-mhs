@@ -11,41 +11,65 @@ use Illuminate\Support\Facades\Storage;
 
 class DokumenController extends Controller
 {
+    private $requiredDocs = [
+        'rekomendasi',
+        'surat_pernyataan',
+        'ktp',
+        'ktm',
+        'izin_penelitian'
+    ];
+
     public function storeUpload(Request $request)
     {
-        $validated = $request->validate([
+        // 1. Validasi
+        $request->validate([
             'nama-dokumen' => 'required|string|max:255',
             'tanggal-upload' => 'required|date',
             'deskripsi' => 'required|string',
-            'file-input' => 'required|file|mimes:pdf,doc,docx|max:10240', // 10MB
+            // Validasi Array Dokumen
+            'dokumen' => 'required|array',
+            'dokumen.*' => 'required|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:5120', // Max 5MB per file
         ], [
-            'nama-dokumen.required' => 'Nama dokumen wajib diisi.',
-            'file-input.required' => 'File dokumen wajib di-upload.',
-            'file-input.mimes' => 'Format file harus PDF, DOC, atau DOCX.',
-            'file-input.max' => 'Ukuran file tidak boleh lebih dari 10MB.',
+            'dokumen.*.required' => 'File ini wajib diunggah.',
+            'dokumen.*.mimes' => 'Format file harus PDF, DOC, atau Gambar.',
         ]);
 
-        try {
-            $file = $request->file('file-input');
-            $namaFile = time() . '_' . $file->getClientOriginalName();
-            $path = $file->storeAs('dokumen_arsip', $namaFile, 'public');
+        // Cek kelengkapan (Hard validation optional, karena sudah ada 'required' di array validation)
+        foreach ($this->requiredDocs as $key) {
+            if (!$request->hasFile("dokumen.$key")) {
+                return back()->withInput()->withErrors(["dokumen.$key" => "Dokumen ini wajib diisi!"]);
+            }
+        }
 
+        try {
+            $filePaths = [];
+
+            // 2. Loop dan Upload setiap file
+            foreach ($request->file('dokumen') as $key => $file) {
+                // Nama file unik: time_jenis_originalName
+                $filename = time() . '_' . $key . '.' . $file->getClientOriginalExtension();
+
+                // Store file
+                $path = $file->storeAs('dokumen_arsip/' . Auth::id(), $filename, 'public');
+
+                // Simpan path ke array temporary
+                $filePaths[$key] = $path;
+            }
+
+            // 3. Simpan ke Database (Kolom file akan otomatis jadi JSON karena Casting di Model)
             Arsip::create([
                 'user_id' => Auth::id(),
-                'nama' => $validated['nama-dokumen'],
-                'deskripsi' => $validated['deskripsi'],
-                'tgl_upload' => $validated['tanggal-upload'],
-                'file' => $path,
+                'nama' => $request->input('nama-dokumen'),
+                'deskripsi' => $request->input('deskripsi'),
+                'tgl_upload' => $request->input('tanggal-upload'),
+                'file' => $filePaths, // Array ini otomatis di-json_encode oleh Laravel
                 'status' => 'pending',
             ]);
 
-            return redirect()->route('user.riwayat')
-                ->with('success', 'Dokumen berhasil di-upload!');
+            return redirect()->route('user.riwayat')->with('success', 'Semua berkas berhasil diunggah!');
         } catch (\Exception $e) {
-            Log::error('Error uploading document: ' . $e->getMessage());
-            return redirect()->back()
-                ->withInput()
-                ->with('error', 'Terjadi kesalahan pada server. Coba lagi nanti.');
+            Log::error('Upload Error: ' . $e->getMessage());
+            return back()->withInput()->with('error', 'Gagal menyimpan data.');
         }
     }
 
@@ -71,40 +95,46 @@ class DokumenController extends Controller
                 ->with('error', 'Dokumen yang sudah divalidasi tidak dapat diubah.');
         }
 
-        $validated = $request->validate([
+        $request->validate([
             'nama' => 'required|string|max:255',
             'deskripsi' => 'required|string',
-            'file' => 'nullable|file|mimes:pdf,doc,docx|max:10240' // file opsional
+            'dokumen.*' => 'nullable|file|mimes:pdf,doc,docx,jpg,png|max:5120',
         ]);
 
         try {
-            $arsip->nama = $validated['nama'];
-            $arsip->deskripsi = $validated['deskripsi'];
+            $arsip->nama = $request->nama;
+            $arsip->deskripsi = $request->deskripsi;
 
-            if ($request->hasFile('file')) {
-                $oldFilePath = $arsip->file;
+            // Ambil data file lama (Array)
+            $currentFiles = $arsip->file ?? []; 
 
-                $file = $request->file('file');
-                $namaFile = time() . '_' . $file->getClientOriginalName();
-                $newPath = $file->storeAs('dokumen_arsip', $namaFile, 'public');
+            // Cek jika ada file baru yang diupload untuk mengganti yang lama
+            if ($request->has('dokumen')) {
+                foreach ($request->file('dokumen') as $key => $file) {
+                    
+                    // Hapus file lama fisik jika ada update pada key tersebut
+                    if (isset($currentFiles[$key]) && Storage::disk('public')->exists($currentFiles[$key])) {
+                        Storage::disk('public')->delete($currentFiles[$key]);
+                    }
 
-                $arsip->file = $newPath;
+                    // Upload file baru
+                    $filename = time() . '_' . $key . '.' . $file->getClientOriginalExtension();
+                    $path = $file->storeAs('dokumen_arsip/' . Auth::id(), $filename, 'public');
 
-                if ($oldFilePath && Storage::disk('public')->exists($oldFilePath)) {
-                    Storage::disk('public')->delete($oldFilePath);
+                    // Update array path
+                    $currentFiles[$key] = $path;
                 }
             }
 
-            $arsip->status = 'pending';
+            $arsip->file = $currentFiles; // Update kolom JSON
+            $arsip->status = 'pending'; // Reset status jadi pending setelah revisi
+            $arsip->catatan_revisi = null; // Clear catatan revisi
             $arsip->save();
 
-            return redirect()->route('user.riwayat')
-                ->with('success', 'Dokumen berhasil diperbarui dan dikirim ulang untuk validasi.');
+            return redirect()->route('user.riwayat')->with('success', 'Dokumen revisi berhasil dikirim.');
+
         } catch (\Exception $e) {
-            Log::error('Update Dokumen Gagal (ID: ' . $arsip->id . '): ' . $e->getMessage());
-            return redirect()->back()
-                ->withInput()
-                ->with('error', 'Terjadi kesalahan pada server. Silakan coba lagi.');
+            return back()->with('error', 'Gagal update: ' . $e->getMessage());
         }
     }
 }

@@ -2,26 +2,29 @@
 @section('title', 'Dokumen Masuk')
 
 @section('content')
-    <main class="flex-1 p-4 sm:p-6 lg:p-8 overflow-x-auto">
+    <main class="flex-1 p-4 sm:p-6 lg:p-8 overflow-x-auto min-h-screen pb-20">
         <div class="max-w-7xl mx-auto space-y-8">
+
+            {{-- STATISTIK CARD --}}
             <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <div class="stat-card bg-white rounded-xl shadow-sm border border-gray-200 p-6 fade-in">
+                {{-- Card Total --}}
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 fade-in">
                     <div class="flex items-center">
                         <div class="p-3 rounded-lg bg-blue-100 text-blue-600 mr-4">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01. seventh.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
                                 </path>
                             </svg>
                         </div>
                         <div>
                             <p class="text-sm font-medium text-gray-600">Total Dokumen</p>
-                            <p class="text-2xl font-bold text-gray-900" id="total-documents">{{ $stats['total'] }}</p>
+                            <p class="text-2xl font-bold text-gray-900">{{ $stats['total'] }}</p>
                         </div>
                     </div>
                 </div>
-
-                <div class="stat-card bg-white rounded-xl shadow-sm border border-gray-200 p-6 fade-in">
+                {{-- Card Pending --}}
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 fade-in">
                     <div class="flex items-center">
                         <div class="p-3 rounded-lg bg-amber-100 text-amber-600 mr-4">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24">
@@ -31,12 +34,12 @@
                         </div>
                         <div>
                             <p class="text-sm font-medium text-gray-600">Menunggu Validasi</p>
-                            <p class="text-2xl font-bold text-gray-900" id="pending-documents">{{ $stats['pending'] }}</p>
+                            <p class="text-2xl font-bold text-gray-900">{{ $stats['pending'] }}</p>
                         </div>
                     </div>
                 </div>
-
-                <div class="stat-card bg-white rounded-xl shadow-sm border border-gray-200 p-6 fade-in">
+                {{-- Card Valid --}}
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 fade-in">
                     <div class="flex items-center">
                         <div class="p-3 rounded-lg bg-green-100 text-green-600 mr-4">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24">
@@ -46,12 +49,12 @@
                         </div>
                         <div>
                             <p class="text-sm font-medium text-gray-600">Tervalidasi</p>
-                            <p class="text-2xl font-bold text-gray-900" id="valid-documents">{{ $stats['valid'] }}</p>
+                            <p class="text-2xl font-bold text-gray-900">{{ $stats['valid'] }}</p>
                         </div>
                     </div>
                 </div>
-
-                <div class="stat-card bg-white rounded-xl shadow-sm border border-gray-200 p-6 fade-in">
+                {{-- Card Revisi --}}
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 fade-in">
                     <div class="flex items-center">
                         <div class="p-3 rounded-lg bg-red-100 text-red-600 mr-4">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24">
@@ -62,19 +65,19 @@
                         </div>
                         <div>
                             <p class="text-sm font-medium text-gray-600">Perlu Revisi</p>
-                            <p class="text-2xl font-bold text-gray-900" id="revision-documents">{{ $stats['revisi'] }}</p>
+                            <p class="text-2xl font-bold text-gray-900">{{ $stats['revisi'] }}</p>
                         </div>
                     </div>
                 </div>
             </div>
 
+            {{-- FILTER SECTION --}}
             <form method="GET" action="{{ url()->current() }}" id="filter-form">
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 fade-in">
                     <div class="flex flex-col lg:flex-row lg:items-end gap-6">
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 flex-1">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 flex-1 min-w-0">
                             <div>
-                                <label for="search" class="block text-sm font-medium text-gray-700 mb-2">Cari
-                                    Dokumen</label>
+                                <label for="search" class="block text-sm font-medium text-gray-700 mb-2">Cari</label>
                                 <div class="relative">
                                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                         <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor"
@@ -84,16 +87,15 @@
                                         </svg>
                                     </div>
                                     <input type="text" id="search" name="search"
-                                        placeholder="Cari nama dokumen atau deskripsi..."
-                                        value="{{ $filters['search'] ?? '' }}"
-                                        class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+                                        placeholder="Nama, Deskripsi, atau User..." value="{{ $filters['search'] ?? '' }}"
+                                        class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm" />
                                 </div>
                             </div>
                             <div>
-                                <label for="status-filter"
-                                    class="block text-sm font-medium text-gray-700 mb-2">Status</label>
-                                <select id="status-filter" name="status"
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                <label for="status" class="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                                <select id="status" name="status"
+                                    class="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+
                                     <option value="">Semua Status</option>
                                     <option value="pending" {{ ($filters['status'] ?? '') == 'pending' ? 'selected' : '' }}>
                                         Menunggu Validasi</option>
@@ -104,469 +106,321 @@
                                 </select>
                             </div>
                             <div>
-                                <label for="date-range" class="block text-sm font-medium text-gray-700 mb-2">Rentang
-                                    Tanggal</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Tanggal</label>
                                 <div class="flex gap-2">
-                                    <input type="date" id="date-from" name="date_from"
-                                        value="{{ $filters['date_from'] ?? '' }}"
-                                        class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm" />
-                                    <span class="flex items-center text-gray-500">s/d</span>
-                                    <input type="date" id="date-to" name="date_to"
-                                        value="{{ $filters['date_to'] ?? '' }}"
-                                        class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm" />
+                                    <input type="date" name="date_from" value="{{ $filters['date_from'] ?? '' }}"
+                                        class="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm" />
+                                    <input type="date" name="date_to" value="{{ $filters['date_to'] ?? '' }}"
+                                        class="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm" />
                                 </div>
                             </div>
-                            <div class="flex gap-3">
-                                <a href="{{ url()->current() }}" id="reset-filters"
-                                    class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors">
-                                    Reset
-                                </a>
-                                <button id="apply-filters" type="submit"
-                                    class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors">
-                                    Terapkan Filter
-                                </button>
-                            </div>
                         </div>
-
+                        <div class="flex gap-3 flex-shrink-0">
+                            <a href="{{ url()->current() }}"
+                                class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors">Reset</a>
+                            <button type="submit"
+                                class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors">Filter</button>
+                        </div>
                     </div>
                 </div>
             </form>
 
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200 fade-in">
-                <div class="p-6 border-b border-gray-200">
-                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                        <div>
-                            <h2 class="text-xl font-semibold text-gray-900">
-                                Daftar Dokumen Masuk
-                            </h2>
-                            <p class="text-sm text-gray-600 mt-1" id="table-summary">
-                                Menampilkan {{ $dokumen->firstItem() ?? 0 }} sampai {{ $dokumen->lastItem() ?? 0 }}
-                                dari {{ $dokumen->total() }} dokumen
-                            </p>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            
-                            <div class="relative">
-                                <select id="sort-by" name="sort_by" form="filter-form"
-                                    class="pl-3 pr-8 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 appearance-none bg-white">
-                                    <option value="newest"
-                                        {{ ($filters['sort_by'] ?? 'newest') == 'newest' ? 'selected' : '' }}>
-                                        Terbaru</option>
-                                    <option value="oldest"
-                                        {{ ($filters['sort_by'] ?? '') == 'oldest' ? 'selected' : '' }}>
-                                        Terlama</option>
-                                    <option value="name" {{ ($filters['sort_by'] ?? '') == 'name' ? 'selected' : '' }}>
-                                        Nama A-Z</option>
-                                </select>
-                                <div
-                                    class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M19 9l-7 7-7-7"></path>
-                                    </svg>
-                                </div>
-                            </div>
-                        </div>
+            {{-- TABLE SECTION --}}
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 fade-in overflow-hidden">
+                <div
+                    class="p-6 border-b border-gray-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <div>
+                        <h2 class="text-xl font-semibold text-gray-900">Daftar Semua Dokumen</h2>
+                        <p class="text-sm text-gray-600 mt-1">
+                            Menampilkan {{ $dokumen->firstItem() ?? 0 }} - {{ $dokumen->lastItem() ?? 0 }} dari
+                            {{ $dokumen->total() }} data
+                        </p>
+                    </div>
+                    <div>
+                        <select name="sort_by" form="filter-form" onchange="this.form.submit()"
+                            class="pl-3 pr-8 py-2 text-sm border border-gray-300 rounded-lg bg-white">
+                            <option value="newest" {{ ($filters['sort_by'] ?? 'newest') == 'newest' ? 'selected' : '' }}>
+                                Terbaru</option>
+                            <option value="oldest" {{ ($filters['sort_by'] ?? '') == 'oldest' ? 'selected' : '' }}>Terlama
+                            </option>
+                            <option value="name" {{ ($filters['sort_by'] ?? '') == 'name' ? 'selected' : '' }}>Nama A-Z
+                            </option>
+                        </select>
                     </div>
                 </div>
+
                 <div class="overflow-x-auto">
                     <table class="w-full hidden md:table">
-                        <thead class="bg-gray-50">
+                        <thead class="bg-gray-50 border-b border-gray-200">
                             <tr>
-                                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Dokumen
-                                </th>
-                                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Pengunggah
-                                </th>
-                                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Tanggal Upload
-                                </th>
-                                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Status
-                                </th>
-                                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Aksi
-                                </th>
+                                <th
+                                    class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                                    Judul & Deskripsi</th>
+                                <th
+                                    class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                                    Pengunggah</th>
+                                <th
+                                    class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                                    Berkas</th>
+                                <th
+                                    class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                                    Status</th>
+                                <th
+                                    class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                                    Info</th>
                             </tr>
                         </thead>
-                        <tbody id="document-table" class="bg-white divide-y divide-gray-200">
-                            {{-- LOOPING UTAMA DARI PHP --}}
+                        <tbody class="bg-white divide-y divide-gray-200">
                             @forelse ($dokumen as $doc)
                                 <tr class="hover:bg-gray-50 transition-colors">
                                     <td class="px-6 py-4">
-                                        <div class="flex items-center">
-
-                                            {{-- LOGIKA ICON (Dipindahkan dari partial) --}}
-                                            @php
-                                                $fileType = strtolower($doc->file ?? '');
-                                                $icon =
-                                                    '<svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>';
-                                                $bg = 'bg-gray-100';
-
-                                                if (str_contains($fileType, '.pdf')) {
-                                                    $icon =
-                                                        '<svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>';
-                                                    $bg = 'bg-red-100';
-                                                } elseif (
-                                                    str_contains($fileType, '.doc') ||
-                                                    str_contains($fileType, '.docx')
-                                                ) {
-                                                    $icon =
-                                                        '<svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>';
-                                                    $bg = 'bg-blue-100';
-                                                }
-                                            @endphp
-                                            <div class="p-2 {{ $bg }} rounded-lg">
-                                                {!! $icon !!}
-                                            </div>
-                                            {{-- AKHIR LOGIKA ICON --}}
-
-                                            <div class="ml-4">
-                                                <div class="text-sm font-medium text-gray-900">{{ $doc->nama ?? 'N/A' }}
-                                                </div>
-                                                <div class="text-sm text-gray-500 mt-1">
-                                                    {{ $doc->deskripsi ?? 'Tidak ada deskripsi' }}</div>
-                                            </div>
+                                        <div class="text-sm font-bold text-gray-900">{{ $doc->nama }}</div>
+                                        <div class="text-xs text-gray-500 mt-1 max-w-xs truncate">{{ $doc->deskripsi }}
                                         </div>
+                                        <div class="text-xs text-gray-400 mt-1">
+                                            {{ $doc->created_at->format('d M Y, H:i') }}</div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">{{ $doc->user?->name ?? 'N/A' }}</div>
-                                        <div class="text-sm text-gray-500">{{ $doc->user?->email ?? '' }}</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                                        {{ $doc->created_at->format('d M Y, H:i') }}
+                                        <div class="text-sm font-medium text-gray-900">
+                                            {{ $doc->user->name ?? 'User Terhapus' }}</div>
+                                        <div class="text-xs text-gray-500">{{ $doc->user->email ?? '-' }}</div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-
-                                        {{-- LOGIKA BADGE (Dipindahkan dari partial) --}}
+                                        {{-- LOGIKA BARU: Tampilkan Jumlah Berkas (Tanpa Dropdown karena Read Only, detail lihat di modal) --}}
+                                        @if (is_array($doc->file))
+                                            <span
+                                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-100">
+                                                {{ count($doc->file) }} Berkas
+                                            </span>
+                                        @else
+                                            <span
+                                                class="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800">
+                                                Single File
+                                            </span>
+                                        @endif
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
                                         @php
                                             $config = [
                                                 'pending' => [
-                                                    'text' => 'Menunggu Validasi',
+                                                    'text' => 'Menunggu',
                                                     'class' => 'bg-amber-100 text-amber-800',
                                                 ],
                                                 'valid' => [
-                                                    'text' => 'Tervalidasi',
+                                                    'text' => 'Valid',
                                                     'class' => 'bg-green-100 text-green-800',
                                                 ],
-                                                'revisi' => [
-                                                    'text' => 'Perlu Revisi',
-                                                    'class' => 'bg-red-100 text-red-800',
-                                                ],
+                                                'revisi' => ['text' => 'Revisi', 'class' => 'bg-red-100 text-red-800'],
                                             ];
                                             $s = $config[$doc->status] ?? [
                                                 'text' => $doc->status,
-                                                'class' => 'bg-gray-100 text-gray-800',
+                                                'class' => 'bg-gray-100',
                                             ];
                                         @endphp
                                         <span
-                                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $s['class'] }}">
+                                            class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $s['class'] }}">
                                             {{ $s['text'] }}
                                         </span>
-                                        {{-- AKHIR LOGIKA BADGE --}}
-
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                        <div class="flex space-x-2">
-                                            <button data-modal-toggle="detail-modal-{{ $doc->id }}"
-                                                class="text-blue-600 hover:text-blue-900">Detail</button>
-                                        </div>
+                                        <button data-modal-toggle="detail-modal-{{ $doc->id }}"
+                                            class="text-blue-600 hover:text-blue-900 bg-blue-50 px-3 py-1 rounded hover:bg-blue-100 transition-colors flex items-center">
+                                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-.001.03-.002.06-.002.09a.097.097 0 01-.096.095 4.5 4.5 0 01-8.9 0 .097.097 0 01-.096-.095c0-.03.001-.06.002-.09z">
+                                                </path>
+                                            </svg>
+                                            Lihat Detail
+                                        </button>
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="5">
-                                        <div class="p-8 text-center text-gray-500">
-                                            <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none"
-                                                stroke="currentColor" viewbox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-                                                </path>
-                                            </svg>
-                                            <p class="text-lg font-medium text-gray-900 mb-2">
-                                                Belum ada dokumen
-                                            </p>
-                                            <p class="text-gray-600 mb-4">
-                                                Tidak ada dokumen yang cocok dengan filter Anda.
-                                            </p>
-                                        </div>
+                                    <td colspan="5" class="px-6 py-10 text-center text-gray-500">
+                                        Tidak ada dokumen ditemukan.
                                     </td>
                                 </tr>
                             @endforelse
                         </tbody>
                     </table>
 
-                    <div id="document-mobile" class="md:hidden p-4 space-y-4">
-                        @forelse ($dokumen as $doc)
-                            <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                                <div class="flex justify-between items-start mb-3">
-                                    <div class="flex items-center">
-                                        {{-- LOGIKA ICON (Mobile) --}}
-                                        @php
-                                            $fileType = strtolower($doc->file ?? '');
-                                            $icon =
-                                                '<svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>';
-                                            $bg = 'bg-gray-100';
-
-                                            if (str_contains($fileType, '.pdf')) {
-                                                $icon =
-                                                    '<svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>';
-                                                $bg = 'bg-red-100';
-                                            } elseif (
-                                                str_contains($fileType, '.doc') ||
-                                                str_contains($fileType, '.docx')
-                                            ) {
-                                                $icon =
-                                                    '<svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>';
-                                                $bg = 'bg-blue-100';
-                                            }
-                                        @endphp
-                                        <div class="p-2 {{ $bg }} rounded-lg">
-                                            {!! $icon !!}
-                                        </div>
-                                        {{-- AKHIR LOGIKA ICON (Mobile) --}}
-
-                                        <div class="ml-3">
-                                            <h3 class="font-medium text-gray-900 text-sm">{{ $doc->nama ?? 'N/A' }}</h3>
-                                            <p class="text-xs text-gray-600">{{ $doc->user?->name ?? 'N/A' }}</p>
-                                        </div>
+                    {{-- MOBILE VIEW --}}
+                    <div class="md:hidden p-4 space-y-4">
+                        @foreach ($dokumen as $doc)
+                            <div class="bg-white border rounded-lg shadow-sm p-4">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <h3 class="font-bold text-gray-900">{{ $doc->nama }}</h3>
+                                        <p class="text-xs text-gray-500">{{ $doc->user->name ?? 'N/A' }}</p>
                                     </div>
-                                    {{-- LOGIKA BADGE (Mobile) --}}
                                     @php
-                                        $config = [
-                                            'pending' => [
-                                                'text' => 'Menunggu Validasi',
-                                                'class' => 'bg-amber-100 text-amber-800',
-                                            ],
-                                            'valid' => [
-                                                'text' => 'Tervalidasi',
-                                                'class' => 'bg-green-100 text-green-800',
-                                            ],
-                                            'revisi' => [
-                                                'text' => 'Perlu Revisi',
-                                                'class' => 'bg-red-100 text-red-800',
-                                            ],
-                                        ];
                                         $s = $config[$doc->status] ?? [
                                             'text' => $doc->status,
-                                            'class' => 'bg-gray-100 text-gray-800',
+                                            'class' => 'bg-gray-100',
                                         ];
                                     @endphp
                                     <span
-                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $s['class'] }}">
-                                        {{ $s['text'] }}
-                                    </span>
-                                    {{-- AKHIR LOGIKA BADGE (Mobile) --}}
+                                        class="px-2 py-1 text-xs rounded-full {{ $s['class'] }}">{{ $s['text'] }}</span>
                                 </div>
-                                <p class="text-sm text-gray-600 mb-3">{{ $doc->deskripsi ?? 'Tidak ada deskripsi' }}</p>
-                                <div class="flex justify-between items-center text-xs text-gray-500 mb-3">
-                                    <span>
-                                        {{ $doc->created_at->format('d M Y, H:i') }}
-                                    </span>
+                                <div class="mt-3 text-sm text-gray-600">
+                                    {{ count(is_array($doc->file) ? $doc->file : []) }} Berkas terlampir.
                                 </div>
-                                <div class="flex justify-end space-x-2">
+                                <div class="mt-4 flex justify-end">
                                     <button data-modal-toggle="detail-modal-{{ $doc->id }}"
-                                        class="px-3 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">
-                                        Detail
+                                        class="w-full bg-blue-600 text-white py-2 rounded-lg text-sm font-medium">
+                                        Lihat Detail
                                     </button>
-                                    @if ($doc->status === 'pending')
-                                        {{-- Ini bisa jadi form PHP --}}
-                                        <button
-                                            class="px-3 py-1 text-xs bg-green-600 text-white rounded hover:bg-green-700 transition-colors">
-                                            Validasi
-                                        </button>
-                                        <button
-                                            class="px-3 py-1 text-xs bg-amber-600 text-white rounded hover:bg-amber-700 transition-colors">
-                                            Revisi
-                                        </button>
-                                    @endif
                                 </div>
                             </div>
-                        @empty
-                            <div class="p-8 text-center text-gray-500">
-                                <p class="text-lg font-medium text-gray-900 mb-2">Belum ada dokumen</p>
-                            </div>
-                        @endforelse
+                        @endforeach
                     </div>
                 </div>
 
-                <div id="pagination" class="p-4 border-t border-gray-200">
+                <div class="px-6 py-4 border-t border-gray-200">
                     {{ $dokumen->links() }}
                 </div>
             </div>
         </div>
     </main>
 
+    {{-- MODALS CONTAINER (READ ONLY) --}}
     <div id="modal-container">
-            @foreach ($dokumen as $doc)
-                
-                <div id="detail-modal-{{ $doc->id }}"
-                    class="dokumen-modal fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50 hidden">
-                    <div class="relative w-full max-w-2xl bg-white rounded-lg shadow-xl flex flex-col max-h-[90vh]">
-                        
-                        <div class="flex justify-between items-center p-4 border-b flex-shrink-0">
-                            <h3 class="text-lg font-medium text-gray-900">Detail Dokumen</h3>
-                            <button data-modal-close="detail-modal-{{ $doc->id }}"
-                                class="text-gray-400 hover:text-gray-600">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M6 18L18 6M6 6l12 12"></path>
-                                </svg>
-                            </button>
-                        </div>
+        @foreach ($dokumen as $doc)
+            <div id="detail-modal-{{ $doc->id }}"
+                class="dokumen-modal fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-70 hidden backdrop-blur-sm">
+                <div class="relative w-full max-w-6xl bg-white rounded-xl shadow-2xl flex flex-col h-[90vh]">
 
-                        <div class="p-6 space-y-4 overflow-y-auto flex-1">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Nama Dokumen</label>
-                                    <p class="text-sm text-gray-900 break-words">{{ $doc->nama ?? 'N/A' }}</p>
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Pengunggah</label>
-                                    <p class="text-sm text-gray-900">{{ $doc->user?->name ?? 'N/A' }}</p>
-                                    <p class="text-xs text-gray-600">{{ $doc->user?->email ?? '' }}</p>
-                                </div>
-                                <div class="md:col-span-2">
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Deskripsi</label>
-                                    <p class="text-sm text-gray-900">{{ $doc->deskripsi ?? 'Tidak ada deskripsi' }}</p>
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Upload</label>
-                                    <p class="text-sm text-gray-900">{{ $doc->created_at->format('d M Y, H:i') }}</p>
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
-                                    @php
-                                        $config = [
-                                            'pending' => ['text' => 'Menunggu Validasi', 'class' => 'bg-amber-100 text-amber-800'],
-                                            'valid' => ['text' => 'Tervalidasi', 'class' => 'bg-green-100 text-green-800'],
-                                            'revisi' => ['text' => 'Perlu Revisi', 'class' => 'bg-red-100 text-red-800'],
-                                        ];
-                                        $s = $config[$doc->status] ?? ['text' => $doc->status, 'class' => 'bg-gray-100 text-gray-800'];
-                                    @endphp
-                                    <span
-                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $s['class'] }}">
-                                        {{ $s['text'] }}
-                                    </span>
+                    {{-- Modal Header --}}
+                    <div class="flex justify-between items-center p-4 border-b bg-gray-50 rounded-t-xl">
+                        <div>
+                            <h3 class="text-lg font-bold text-gray-900">{{ $doc->nama }}</h3>
+                            <p class="text-xs text-gray-500">Oleh: {{ $doc->user->name ?? 'N/A' }} |
+                                {{ $doc->created_at->format('d M Y H:i') }}</p>
+                        </div>
+                        <button data-modal-close="detail-modal-{{ $doc->id }}"
+                            class="text-gray-400 hover:text-red-500 p-2 hover:bg-gray-100 rounded-full transition-colors">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+
+                    {{-- Modal Body: Split Layout --}}
+                    <div class="flex-1 overflow-hidden flex flex-col md:flex-row">
+
+                        {{-- KIRI: List File & Info --}}
+                        <div class="w-full md:w-1/3 border-r border-gray-200 flex flex-col bg-white overflow-y-auto">
+                            <div class="p-4 border-b border-gray-100">
+                                <h4 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Daftar Berkas
+                                </h4>
+                                <div class="space-y-2">
+                                    @if (is_array($doc->file))
+                                        @foreach ($doc->file as $key => $path)
+                                            <button
+                                                onclick="changePreview('{{ $doc->id }}', '{{ asset('storage/' . $path) }}', '{{ $path }}')"
+                                                class="w-full text-left px-4 py-3 rounded-lg border border-gray-200 hover:border-blue-500 hover:bg-blue-50 transition-all group focus:ring-2 focus:ring-blue-500">
+                                                <div class="flex items-center justify-between">
+                                                    <div class="flex items-center">
+                                                        <span
+                                                            class="bg-blue-100 text-blue-600 p-2 rounded-md mr-3 group-hover:bg-blue-200">
+                                                            <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                                viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    stroke-width="2"
+                                                                    d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z">
+                                                                </path>
+                                                            </svg>
+                                                        </span>
+                                                        <div>
+                                                            <p
+                                                                class="text-sm font-semibold text-gray-700 group-hover:text-blue-800">
+                                                                {{ ucwords(str_replace('_', ' ', $key)) }}</p>
+                                                            <p class="text-[10px] text-gray-400">Klik untuk preview</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </button>
+                                        @endforeach
+                                    @else
+                                        <div class="p-3 bg-red-50 text-red-600 text-sm rounded">Format file lama (Single
+                                            String)</div>
+                                    @endif
                                 </div>
                             </div>
 
-                            @php
-                                $isPdf = str_contains(strtolower($doc->file), '.pdf');
-                                $fileAbsoluteUrl = asset(Storage::url($doc->file));
-                                $pdfViewerUrl = asset('pdfjs/web/viewer.html') . '?file=' . urlencode($fileAbsoluteUrl);
-                            @endphp
-
-                            @if ($isPdf)
-                                <div class="mt-4 pt-4 border-t">
-                                    <h4 class="text-sm font-medium text-gray-700 mb-2">Preview Dokumen</h4>
-                                    <div class="w-full h-[600px] border rounded-lg overflow-hidden bg-gray-200">
-                                        <iframe src="{{ $pdfViewerUrl }}" width="100%" height="100%" frameborder="0"
-                                            loading="lazy">
-                                            Memuat preview...
-                                        </iframe>
-                                    </div>
-                                </div>
-                            @else
-                                <div class="mt-4 pt-4 border-t">
-                                    <h4 class="text-sm font-medium text-gray-700 mb-2">Preview Dokumen</h4>
-                                    <div class="p-4 text-center bg-gray-50 rounded-lg border">
-                                        <p class="text-sm text-gray-600">
-                                            Preview tidak tersedia untuk tipe file ini.
-                                        </p>
-                                        <a href="{{ $fileAbsoluteUrl }}" target="_blank" rel="noopener noreferrer"
-                                            class="mt-2 inline-block text-blue-600 hover:underline text-sm font-medium">
-                                            Buka/Download File ({{ basename($doc->file) }})
-                                        </a>
-                                    </div>
-                                </div>
-                            @endif
+                            <div class="p-4">
+                                <h4 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Deskripsi
+                                    Pengajuan</h4>
+                                <p class="text-sm text-gray-600 bg-gray-50 p-3 rounded-lg border border-gray-100">
+                                    {{ $doc->deskripsi }}
+                                </p>
+                            </div>
                         </div>
 
-                        <div class="flex justify-end space-x-3 p-4 border-t bg-gray-50 rounded-b-lg flex-shrink-0">
-                            <button data-modal-close="detail-modal-{{ $doc->id }}" type="button"
-                                class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors">
-                                Tutup
-                            </button>
+                        {{-- KANAN: Preview Area --}}
+                        <div class="w-full md:w-2/3 bg-gray-100 flex flex-col relative">
+                            <div class="flex-1 relative overflow-hidden flex items-center justify-center p-4">
+                                {{-- Loading State --}}
+                                <div id="loader-{{ $doc->id }}"
+                                    class="absolute inset-0 flex items-center justify-center bg-gray-100 z-10 hidden">
+                                    <svg class="animate-spin h-8 w-8 text-blue-600" xmlns="http://www.w3.org/2000/svg"
+                                        fill="none" viewBox="0 0 24 24">
+                                        <circle class="opacity-25" cx="12" cy="12" r="10"
+                                            stroke="currentColor" stroke-width="4"></circle>
+                                        <path class="opacity-75" fill="currentColor"
+                                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                        </path>
+                                    </svg>
+                                </div>
+
+                                {{-- Iframe Preview --}}
+                                <iframe id="preview-frame-{{ $doc->id }}" src="about:blank"
+                                    class="w-full h-full rounded-lg shadow-sm bg-white border border-gray-200 hidden"></iframe>
+
+                                {{-- Placeholder State (Initial) --}}
+                                <div id="placeholder-{{ $doc->id }}" class="text-center text-gray-400">
+                                    <svg class="w-16 h-16 mx-auto mb-2 opacity-50" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                                        </path>
+                                    </svg>
+                                    <p class="text-sm">Pilih berkas di sebelah kiri untuk melihat preview</p>
+                                </div>
+
+                                {{-- Image Preview Tag (Alternative if not PDF) --}}
+                                <img id="preview-img-{{ $doc->id }}" src=""
+                                    class="max-w-full max-h-full object-contain hidden rounded-lg shadow-sm" />
+                            </div>
+
+                            {{-- Action Bar (Download Button) --}}
+                            <div class="p-3 bg-white border-t border-gray-200 flex justify-between items-center">
+                                <span id="filename-display-{{ $doc->id }}"
+                                    class="text-xs text-gray-500 italic">Belum ada file dipilih</span>
+                                <a id="download-btn-{{ $doc->id }}" href="#" target="_blank"
+                                    class="text-blue-600 hover:text-blue-800 text-sm font-medium hidden">
+                                    Download File Asli &rarr;
+                                </a>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div id="revisi-modal-{{ $doc->id }}"
-                    class="dokumen-modal fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50 hidden">
-                    <div class="relative w-full max-w-lg bg-white rounded-lg shadow-xl flex flex-col max-h-[90vh]">
-                        <form action="{{ route('admin.dokumen.lakukanRevisi', $doc->id) }}" method="POST">
-                            @csrf
-                            @method('PATCH')
-                            
-                            <div class="flex justify-between items-center p-4 border-b flex-shrink-0">
-                                <h3 class="text-lg font-semibold text-gray-900">Catatan Revisi untuk "{{ $doc->nama }}"</h3>
-                                <button type="button" data-modal-close="revisi-modal-{{ $doc->id }}" class="text-gray-400 hover:text-gray-600">
-                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                                </button>
-                            </div>
-
-                            <div class="p-6 space-y-4 overflow-y-auto flex-1">
-                                <div>
-                                    <label for="catatan_revisi_{{ $doc->id }}" class="block text-sm font-medium text-gray-700 mb-2">
-                                        Apa yang perlu diperbaiki? (Wajib diisi)
-                                    </label>
-                                    <textarea id="catatan_revisi_{{ $doc->id }}" name="catatan_revisi" rows="4"
-                                        class="block w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 p-2"
-                                        placeholder="Contoh: Tolong perbaiki bagian Tanda Tangan, masih belum sesuai..."
-                                        required minlength="10"></textarea>
-                                </div>
-                            </div>
-
-                            <div class="flex justify-end space-x-3 p-4 border-t bg-gray-50 rounded-b-lg flex-shrink-0">
-                                <button type="button" data-modal-close="revisi-modal-{{ $doc->id }}" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors">
-                                    Batal
-                                </button>
-                                <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors">
-                                    Kirim Catatan Revisi
-                                </button>
-                            </div>
-                        </form>
+                    {{-- Modal Footer: Hanya Tutup --}}
+                    <div class="p-4 border-t bg-gray-50 flex justify-end space-x-3 rounded-b-xl">
+                        <button data-modal-close="detail-modal-{{ $doc->id }}"
+                            class="px-5 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 shadow-sm">
+                            Tutup
+                        </button>
                     </div>
+
                 </div>
-            @endforeach
-        </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-
-            const sortBySelect = document.getElementById('sort-by');
-            if (sortBySelect) {
-                sortBySelect.addEventListener('change', function() {
-                    document.getElementById('filter-form').submit();
-                });
-            }
-
-            const modalToggleButtons = document.querySelectorAll('[data-modal-toggle]');
-            modalToggleButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    const targetModalId = button.getAttribute('data-modal-toggle');
-                    const modal = document.getElementById(targetModalId);
-                    if (modal) {
-                        modal.classList.remove('hidden');
-                    }
-                });
-            });
-
-            const modalCloseButtons = document.querySelectorAll('[data-modal-close]');
-            modalCloseButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    const targetModalId = button.getAttribute('data-modal-close');
-                    const modal = document.getElementById(targetModalId);
-                    if (modal) {
-                        modal.classList.add('hidden');
-                    }
-                });
-            });
-
-        });
-    </script>
+            </div>
+        @endforeach
+    </div>
 
     <style>
         .fade-in {
@@ -584,10 +438,71 @@
                 transform: translateY(0);
             }
         }
-
-        .stat-card:hover {
-            transform: translateY(-2px);
-            transition: all 0.2s ease-in-out;
-        }
     </style>
+
+    <script>
+        // Logic Ganti Preview di Modal Detail
+        function changePreview(docId, fullUrl, filePath) {
+            const loader = document.getElementById('loader-' + docId);
+            const iframe = document.getElementById('preview-frame-' + docId);
+            const img = document.getElementById('preview-img-' + docId);
+            const placeholder = document.getElementById('placeholder-' + docId);
+            const downloadBtn = document.getElementById('download-btn-' + docId);
+            const filenameDisp = document.getElementById('filename-display-' + docId);
+
+            // Reset UI
+            placeholder.classList.add('hidden');
+            loader.classList.remove('hidden');
+            iframe.classList.add('hidden');
+            img.classList.add('hidden');
+            downloadBtn.classList.remove('hidden');
+
+            // Set Download Link
+            downloadBtn.href = fullUrl;
+            filenameDisp.textContent = filePath.split('/').pop(); // Show filename
+
+            const ext = filePath.split('.').pop().toLowerCase();
+
+            if (['jpg', 'jpeg', 'png'].includes(ext)) {
+                // Image Mode
+                img.src = fullUrl;
+                img.onload = () => {
+                    loader.classList.add('hidden');
+                    img.classList.remove('hidden');
+                };
+            } else {
+                // PDF Mode (via PDFJS)
+                const viewerUrl = `{{ asset('pdfjs/web/viewer.html') }}?file=${encodeURIComponent(fullUrl)}`;
+                iframe.src = viewerUrl;
+
+                iframe.onload = () => {
+                    loader.classList.add('hidden');
+                    iframe.classList.remove('hidden');
+                };
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Modal Logic (Open/Close)
+            const modalToggles = document.querySelectorAll('[data-modal-toggle]');
+            const modalCloses = document.querySelectorAll('[data-modal-close]');
+
+            modalToggles.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const id = btn.getAttribute('data-modal-toggle');
+                    document.getElementById(id).classList.remove('hidden');
+                });
+            });
+
+            modalCloses.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const id = btn.getAttribute('data-modal-close');
+                    document.getElementById(id).classList.add('hidden');
+                    // Reset Iframe untuk hemat memori
+                    const iframe = document.querySelector(`#${id} iframe`);
+                    if (iframe) iframe.src = 'about:blank';
+                });
+            });
+        });
+    </script>
 @endsection

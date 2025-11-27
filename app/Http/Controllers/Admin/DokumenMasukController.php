@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Arsip;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class DokumenMasukController extends Controller
 {
@@ -13,15 +12,23 @@ class DokumenMasukController extends Controller
     {
         $query = Arsip::query();
 
+        // Filter Pencarian
         if ($request->filled('search')) {
             $query->where(function ($q) use ($request) {
                 $q->where('nama', 'like', '%' . $request->search . '%')
-                  ->orWhere('deskripsi', 'like', '%' . $request->search . '%');
+                  ->orWhere('deskripsi', 'like', '%' . $request->search . '%')
+                  ->orWhereHas('user', function($u) use ($request) {
+                      $u->where('name', 'like', '%' . $request->search . '%');
+                  });
             });
         }
+
+        // Filter Status
         if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
+
+        // Filter Tanggal
         if ($request->filled('date_from')) {
             $query->whereDate('created_at', '>=', $request->date_from);
         }
@@ -29,6 +36,7 @@ class DokumenMasukController extends Controller
             $query->whereDate('created_at', '<=', $request->date_to);
         }
 
+        // Sorting
         $sortBy = $request->input('sort_by', 'newest');
         switch ($sortBy) {
             case 'oldest':
@@ -47,6 +55,7 @@ class DokumenMasukController extends Controller
                                 ->paginate(10)
                                 ->withQueryString();
 
+        // Statistik Realtime
         $stats = [
             'total' => Arsip::count(),
             'pending' => Arsip::where('status', 'pending')->count(),
