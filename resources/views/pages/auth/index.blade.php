@@ -115,7 +115,7 @@
                 </p>
             </div>
         </div>
-        
+
         <div class="flex items-center justify-center p-4 lg:p-8 slide-in-right compact-form">
             <div class="w-full max-w-md">
                 <div class="text-center mb-6 fade-in">
@@ -135,7 +135,7 @@
                 </div>
 
                 <div class="login-card rounded-2xl shadow-xl border border-white/20 compact-card fade-in">
-                    
+
                     @if (session('flash.error'))
                         <div class="mb-4 rounded-lg bg-red-100 p-3 text-sm text-red-700" role="alert">
                             {{ session('flash.error') }}
@@ -146,7 +146,7 @@
                             {{ session('flash.success') }}
                         </div>
                     @endif
-                    
+
                     {{-- Tampilkan error validasi Laravel --}}
                     @if ($errors->any())
                         <div class="mb-4 rounded-lg bg-red-100 p-3 text-sm text-red-700" role="alert">
@@ -172,7 +172,7 @@
                                     placeholder="Masukkan email" />
                             </div>
                         </div>
-                        
+
                         <div class="input-group">
                             <label for="password"
                                 class="block text-sm font-medium text-gray-700 mb-1">Password</label>
@@ -196,7 +196,7 @@
                                 </button>
                             </div>
                         </div>
-                        
+
                         <div class="flex justify-between items-center text-xs mt-3">
                             <a href="{{ route('auth.register') }}" class="text-blue-600 hover:text-blue-800 font-medium transition-colors">
                                 Daftar Akun Baru
@@ -218,7 +218,7 @@
                 </div>
                 <div class="text-center mt-4 text-xs text-gray-500 fade-in compact-footer">
                     <p>
-                        © 2025 <span id="institution-name">Fakultas Ilmu Komputer - Universitas Contoh</span>
+                        © 2025 <span id="institution-name">Jurusan Teknik Informatika - Universitas Negeri Gorontalo</span>
                     </p>
                     <p class="mt-1">Sistem Arsip Penelitian Mahasiswa v2.0</p>
                 </div>
@@ -272,7 +272,7 @@
                 loginText.textContent = "Memproses...";
                 loginSpinner.classList.remove("hidden");
                 loginBtn.disabled = true;
-                
+
                 // Form akan di-submit secara normal ke server (PHP)
             });
         }

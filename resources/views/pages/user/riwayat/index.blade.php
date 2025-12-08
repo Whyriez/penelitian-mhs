@@ -83,10 +83,10 @@
                             <tr>
                                 <th
                                     class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                                    Judul & Deskripsi</th>
+                                    Nama Pengajuan</th>
                                 <th
                                     class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                                    Tgl Upload</th>
+                                    Tanggal Masuk</th>
                                 <th
                                     class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
                                     File Berkas</th>
@@ -103,8 +103,7 @@
                                 <tr class="hover:bg-gray-50 transition-colors">
                                     <td class="px-6 py-4">
                                         <div class="text-sm font-bold text-gray-900">{{ $doc->nama }}</div>
-                                        <div class="text-xs text-gray-500 mt-1 max-w-xs truncate">{{ $doc->deskripsi }}
-                                        </div>
+
                                         @if ($doc->status == 'revisi' && $doc->catatan_revisi)
                                             <div
                                                 class="mt-2 text-xs text-red-600 bg-red-50 p-2 rounded border border-red-100">
@@ -113,7 +112,7 @@
                                         @endif
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                                        {{ $doc->tgl_upload ? \Carbon\Carbon::parse($doc->tgl_upload)->translatedFormat('d M Y') : '-' }}
+                                        {{ $doc->created_at ? \Carbon\Carbon::parse($doc->tgl_upload)->translatedFormat('d M Y') : '-' }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         {{-- LOGIKA BARU: Tampilkan Jumlah Berkas (Tanpa Dropdown karena Read Only, detail lihat di modal) --}}

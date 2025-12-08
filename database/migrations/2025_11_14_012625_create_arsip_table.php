@@ -15,8 +15,15 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->string('nama');
-            $table->text('deskripsi')->nullable();
-            $table->date('tgl_upload');
+
+            $table->string('nama_lembaga');
+            $table->string('tempat_penelitian');
+            $table->string('nomor_surat');
+            $table->date('tgl_surat');
+
+            $table->string('nomor_izin')->nullable();
+            $table->date('tgl_terbit')->nullable();
+
             $table->json('file');
 
             $table->enum('status', ['pending', 'valid', 'revisi'])

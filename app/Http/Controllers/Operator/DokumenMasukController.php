@@ -5,17 +5,19 @@ namespace App\Http\Controllers\Operator;
 use App\Http\Controllers\Controller;
 use App\Models\Arsip;
 use Illuminate\Http\Request;
+use App\Exports\DokumenMasukExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class DokumenMasukController extends Controller
 {
-     public function index(Request $request)
+    public function index(Request $request)
     {
         $query = Arsip::query();
 
         if ($request->filled('search')) {
             $query->where(function ($q) use ($request) {
                 $q->where('nama', 'like', '%' . $request->search . '%')
-                  ->orWhere('deskripsi', 'like', '%' . $request->search . '%');
+                    ->orWhere('deskripsi', 'like', '%' . $request->search . '%');
             });
         }
         if ($request->filled('status')) {
@@ -43,8 +45,8 @@ class DokumenMasukController extends Controller
         }
 
         $dokumenPaginator = $query->with('user:id,name,email')
-                                ->paginate(10)
-                                ->withQueryString();
+            ->paginate(10)
+            ->withQueryString();
 
         $stats = [
             'total' => Arsip::count(),
@@ -58,5 +60,11 @@ class DokumenMasukController extends Controller
             'stats' => $stats,
             'filters' => $request->all()
         ]);
+    }
+
+    public function export(Request $request)
+    {
+        // Kirim $request->all() agar filter (search/date) tetap terbawa saat export
+        return Excel::download(new DokumenMasukExport($request->all()), 'Laporan_Peneliti_' . date('Y-m-d') . '.xlsx');
     }
 }

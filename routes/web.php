@@ -36,23 +36,31 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/validasi-dokumen', [OperatorValidasiDokumenController::class, 'index'])->name('admin.validasi_dokumen');
         Route::patch('/validasi-dokumen/{arsip}/validasi', [OperatorValidasiDokumenController::class, 'validasi'])->name('admin.dokumen.lakukanValidasi');
         Route::patch('/validasi-dokumen/{arsip}/revisi', [OperatorValidasiDokumenController::class, 'revisi'])->name('admin.dokumen.lakukanRevisi');
+
+        Route::get('/operator/dokumen-masuk/export', [OperatorDokumenMasukController::class, 'export'])->name('operator.dokumen.export');
     });
 
     //? User
     Route::middleware(['cekrole:user'])->group(function () {
-        // Halaman Utama User
+
+        // Dashboard User (Boleh diakses walau profil belum lengkap, atau mau diblokir juga boleh)
         Route::get('/user/dashboard', [App\Http\Controllers\User\UserController::class, 'index'])->name('user.index');
 
-        // Upload Dokumen
-        Route::get('/upload-dokumen', [App\Http\Controllers\User\UserController::class, 'indexUpload'])->name('user.upload');
-        Route::post('/upload-dokumen', [App\Http\Controllers\User\DokumenController::class, 'storeUpload'])->name('user.upload.store');
+        // --- AREA WAJIB PROFIL LENGKAP ---
+        // Bungkus route yang butuh data lengkap dengan middleware 'profile.complete'
+        Route::middleware(['profile.complete'])->group(function () {
 
-        // Riwayat Dokumen (Halaman Utama)
-        Route::get('/riwayat-dokumen', [App\Http\Controllers\User\UserController::class, 'indexRiwayat'])->name('user.riwayat');
+            // Upload Dokumen
+            Route::get('/upload-dokumen', [App\Http\Controllers\User\UserController::class, 'indexUpload'])->name('user.upload');
+            Route::post('/upload-dokumen', [App\Http\Controllers\User\DokumenController::class, 'storeUpload'])->name('user.upload.store');
 
-        Route::get('/dokumen/{arsip}/edit', [App\Http\Controllers\User\DokumenController::class, 'edit'])->name('user.dokumen.edit');
-        Route::patch('/dokumen/{arsip}', [App\Http\Controllers\User\DokumenController::class, 'update'])->name('user.dokumen.update');
+            // Riwayat & Edit
+            Route::get('/riwayat-dokumen', [App\Http\Controllers\User\UserController::class, 'indexRiwayat'])->name('user.riwayat');
+            Route::get('/dokumen/{arsip}/edit', [App\Http\Controllers\User\DokumenController::class, 'edit'])->name('user.dokumen.edit');
+            Route::patch('/dokumen/{arsip}', [App\Http\Controllers\User\DokumenController::class, 'update'])->name('user.dokumen.update');
+        });
     });
+
 
     Route::get('/profile-saya', [ProfileController::class, 'index'])->name('profile');
     Route::patch('/profile-saya', [ProfileController::class, 'updateProfile'])->name('profile.update');

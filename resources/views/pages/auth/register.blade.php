@@ -280,6 +280,23 @@
                         </div>
 
                         <div class="input-group">
+                            <label for="nim" class="block text-sm font-medium text-gray-700 mb-1">NIM</label>
+                            <div class="relative">
+                                <svg class="input-icon w-5 h-5" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2H7.17A2.994 2.994 0 017 14z">
+                                    </path>
+                                </svg>
+
+                                <input type="number" id="nim" name="nim" required
+                                    value="{{ old('nim') }}"
+                                    class="input-field w-full px-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-0 transition-all compact-input"
+                                    placeholder="Masukkan nim" />
+                            </div>
+                        </div>
+
+                        <div class="input-group">
                             <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
                             <div class="relative">
                                 <svg class="input-icon w-5 h-5" fill="none" stroke="currentColor"

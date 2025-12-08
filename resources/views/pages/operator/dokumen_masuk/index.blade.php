@@ -73,54 +73,81 @@
 
             {{-- FILTER SECTION --}}
             <form method="GET" action="{{ url()->current() }}" id="filter-form">
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 fade-in">
-                    <div class="flex flex-col lg:flex-row lg:items-end gap-6">
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 flex-1 min-w-0">
-                            <div>
-                                <label for="search" class="block text-sm font-medium text-gray-700 mb-2">Cari</label>
-                                <div class="relative">
-                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                        <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor"
-                                            viewbox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                                        </svg>
-                                    </div>
-                                    <input type="text" id="search" name="search"
-                                        placeholder="Nama, Deskripsi, atau User..." value="{{ $filters['search'] ?? '' }}"
-                                        class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm" />
-                                </div>
-                            </div>
-                            <div>
-                                <label for="status" class="block text-sm font-medium text-gray-700 mb-2">Status</label>
-                                <select id="status" name="status"
-                                    class="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6 fade-in">
 
-                                    <option value="">Semua Status</option>
-                                    <option value="pending" {{ ($filters['status'] ?? '') == 'pending' ? 'selected' : '' }}>
-                                        Menunggu Validasi</option>
-                                    <option value="valid" {{ ($filters['status'] ?? '') == 'valid' ? 'selected' : '' }}>
-                                        Tervalidasi</option>
-                                    <option value="revisi" {{ ($filters['status'] ?? '') == 'revisi' ? 'selected' : '' }}>
-                                        Perlu Revisi</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Tanggal</label>
-                                <div class="flex gap-2">
-                                    <input type="date" name="date_from" value="{{ $filters['date_from'] ?? '' }}"
-                                        class="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm" />
-                                    <input type="date" name="date_to" value="{{ $filters['date_to'] ?? '' }}"
-                                        class="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm" />
+                    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 xl:gap-6 items-end">
+
+                        <div class="col-span-1">
+                            <label for="search" class="block text-sm font-medium text-gray-700 mb-2">Cari</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                    </svg>
                                 </div>
+                                <input type="text" id="search" name="search"
+                                       placeholder="Nama, Deskripsi, User..." value="{{ $filters['search'] ?? '' }}"
+                                       class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm" />
                             </div>
                         </div>
-                        <div class="flex gap-3 flex-shrink-0">
-                            <a href="{{ url()->current() }}"
-                                class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors">Reset</a>
-                            <button type="submit"
-                                class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors">Filter</button>
+
+                        <div class="col-span-1">
+                            <label for="status" class="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                            <select id="status" name="status"
+                                    class="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-lg">
+                                <option value="">Semua Status</option>
+                                <option value="pending" {{ ($filters['status'] ?? '') == 'pending' ? 'selected' : '' }}>
+                                    Menunggu Validasi</option>
+                                <option value="valid" {{ ($filters['status'] ?? '') == 'valid' ? 'selected' : '' }}>
+                                    Tervalidasi</option>
+                                <option value="revisi" {{ ($filters['status'] ?? '') == 'revisi' ? 'selected' : '' }}>
+                                    Perlu Revisi</option>
+                            </select>
                         </div>
+
+                        <div class="col-span-1 md:col-span-2 xl:col-span-1">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Rentang Tanggal</label>
+                            <div class="grid grid-cols-2 gap-2">
+                                <input type="date" name="date_from" value="{{ $filters['date_from'] ?? '' }}"
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-blue-500 focus:border-blue-500"
+                                       placeholder="Dari"/>
+                                <input type="date" name="date_to" value="{{ $filters['date_to'] ?? '' }}"
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-blue-500 focus:border-blue-500"
+                                       placeholder="Sampai"/>
+                            </div>
+                        </div>
+
+                        <div class="col-span-1 md:col-span-2 xl:col-span-1 flex flex-col sm:flex-row gap-2">
+
+                            {{-- Tombol Reset --}}
+                            <a href="{{ url()->current() }}"
+                               class="justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors flex items-center border border-transparent">
+                                Reset
+                            </a>
+
+                            {{-- Group Tombol Utama (Excel & Filter) --}}
+                            <div class="flex gap-2 w-full sm:w-auto flex-1">
+                                <button type="submit" formaction="{{ route('operator.dokumen.export') }}"
+                                        class="flex-1 justify-center px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 transition-colors flex items-center whitespace-nowrap">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                              d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                                        </path>
+                                    </svg>
+                                    Excel
+                                </button>
+
+                                <button type="submit"
+                                        class="flex-1 justify-center px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors flex items-center">
+                                    <svg class="w-4 h-4 mr-2 sm:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                    </svg>
+                                    Filter
+                                </button>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </form>
@@ -155,7 +182,7 @@
                             <tr>
                                 <th
                                     class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                                    Judul & Deskripsi</th>
+                                    Nama Pengajuan</th>
                                 <th
                                     class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
                                     Pengunggah</th>
@@ -350,14 +377,6 @@
                                             String)</div>
                                     @endif
                                 </div>
-                            </div>
-
-                            <div class="p-4">
-                                <h4 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Deskripsi
-                                    Pengajuan</h4>
-                                <p class="text-sm text-gray-600 bg-gray-50 p-3 rounded-lg border border-gray-100">
-                                    {{ $doc->deskripsi }}
-                                </p>
                             </div>
                         </div>
 

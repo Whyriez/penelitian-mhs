@@ -148,7 +148,7 @@
                                     <p class="text-xs text-gray-400 mt-1">{{ $activity->created_at->diffForHumans() }}</p>
                                 </div>
                                 <span
-                                    class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium 
+                                    class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium
                                 {{ $activity->status === 'pending'
                                     ? 'bg-amber-100 text-amber-800'
                                     : ($activity->status === 'valid'
@@ -171,88 +171,53 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 fade-in">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Aksi Cepat</h3>
-                    <div class="space-y-3">
-                        <a href="{{ route('admin.dokumen_masuk') }}"
-                            class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-blue-50 hover:border-blue-200 transition-colors group">
-                            <div
-                                class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mr-3 group-hover:bg-blue-200">
-                                <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor"
-                                    viewbox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-                                    </path>
-                                </svg>
-                            </div>
-                            <span class="text-sm font-medium text-gray-700">Kelola Dokumen Masuk</span>
-                        </a>
-
-                        <a href="{{ route('admin.users.index') }}"
-                            class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-green-50 hover:border-green-200 transition-colors group">
-                            <div
-                                class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center mr-3 group-hover:bg-green-200">
-                                <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor"
-                                    viewbox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z">
-                                    </path>
-                                </svg>
-                            </div>
-                            <span class="text-sm font-medium text-gray-700">Kelola Pengguna</span>
-                        </a>
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 fade-in">
+                <h3 class="text-lg font-semibold text-gray-900 mb-6">Ringkasan Performa</h3>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                    <div class="text-center">
+                        <div class="text-2xl font-bold text-blue-600">{{ $stats['total'] ?? 0 }}</div>
+                        <div class="text-sm text-gray-600 mt-1">Total Dokumen</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-2xl font-bold text-green-600">
+                            {{ $stats['total'] > 0 ? round(($stats['valid'] / $stats['total']) * 100, 1) : 0 }}%
+                        </div>
+                        <div class="text-sm text-gray-600 mt-1">Tingkat Validasi</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-2xl font-bold text-amber-600">
+                            {{ $stats['today'] ?? 0 }}
+                        </div>
+                        <div class="text-sm text-gray-600 mt-1">Dokumen Hari Ini</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-2xl font-bold text-purple-600">
+                            {{ $stats['users'] ?? 0 }}
+                        </div>
+                        <div class="text-sm text-gray-600 mt-1">Total Pengguna</div>
                     </div>
                 </div>
 
-                <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 p-6 fade-in">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-6">Ringkasan Performa</h3>
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-                        <div class="text-center">
-                            <div class="text-2xl font-bold text-blue-600">{{ $stats['total'] ?? 0 }}</div>
-                            <div class="text-sm text-gray-600 mt-1">Total Dokumen</div>
+                <div class="mt-6 space-y-4">
+                    <div>
+                        <div class="flex justify-between text-sm text-gray-600 mb-1">
+                            <span>Dokumen Tervalidasi</span>
+                            <span>{{ $stats['valid'] ?? 0 }}/{{ $stats['total'] ?? 0 }}</span>
                         </div>
-                        <div class="text-center">
-                            <div class="text-2xl font-bold text-green-600">
-                                {{ $stats['total'] > 0 ? round(($stats['valid'] / $stats['total']) * 100, 1) : 0 }}%
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-green-600 h-2 rounded-full"
+                                 style="width: {{ $stats['total'] > 0 ? ($stats['valid'] / $stats['total']) * 100 : 0 }}%">
                             </div>
-                            <div class="text-sm text-gray-600 mt-1">Tingkat Validasi</div>
-                        </div>
-                        <div class="text-center">
-                            <div class="text-2xl font-bold text-amber-600">
-                                {{ $stats['today'] ?? 0 }}
-                            </div>
-                            <div class="text-sm text-gray-600 mt-1">Dokumen Hari Ini</div>
-                        </div>
-                        <div class="text-center">
-                            <div class="text-2xl font-bold text-purple-600">
-                                {{ $stats['users'] ?? 0 }}
-                            </div>
-                            <div class="text-sm text-gray-600 mt-1">Total Pengguna</div>
                         </div>
                     </div>
-
-                    <div class="mt-6 space-y-4">
-                        <div>
-                            <div class="flex justify-between text-sm text-gray-600 mb-1">
-                                <span>Dokumen Tervalidasi</span>
-                                <span>{{ $stats['valid'] ?? 0 }}/{{ $stats['total'] ?? 0 }}</span>
-                            </div>
-                            <div class="w-full bg-gray-200 rounded-full h-2">
-                                <div class="bg-green-600 h-2 rounded-full"
-                                    style="width: {{ $stats['total'] > 0 ? ($stats['valid'] / $stats['total']) * 100 : 0 }}%">
-                                </div>
-                            </div>
+                    <div>
+                        <div class="flex justify-between text-sm text-gray-600 mb-1">
+                            <span>Menunggu Validasi</span>
+                            <span>{{ $stats['pending'] ?? 0 }}/{{ $stats['total'] ?? 0 }}</span>
                         </div>
-                        <div>
-                            <div class="flex justify-between text-sm text-gray-600 mb-1">
-                                <span>Menunggu Validasi</span>
-                                <span>{{ $stats['pending'] ?? 0 }}/{{ $stats['total'] ?? 0 }}</span>
-                            </div>
-                            <div class="w-full bg-gray-200 rounded-full h-2">
-                                <div class="bg-amber-500 h-2 rounded-full"
-                                    style="width: {{ $stats['total'] > 0 ? ($stats['pending'] / $stats['total']) * 100 : 0 }}%">
-                                </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-amber-500 h-2 rounded-full"
+                                 style="width: {{ $stats['total'] > 0 ? ($stats['pending'] / $stats['total']) * 100 : 0 }}%">
                             </div>
                         </div>
                     </div>
@@ -307,7 +272,7 @@
                         },
                         plugins: {
                             legend: {
-                                display: false 
+                                display: false
                             }
                         }
                     }

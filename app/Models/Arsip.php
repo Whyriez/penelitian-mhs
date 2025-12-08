@@ -14,16 +14,22 @@ class Arsip extends Model
         'id',
         'user_id',
         'nama',
-        'deskripsi',
-        'tgl_upload',
+        'nama_lembaga',
+        'tempat_penelitian',
+        'nomor_surat',
+        'tgl_surat',
+        'nomor_izin',
+        'tgl_terbit',
         'file',
         'status',
         'catatan_revisi',
+        'file_revisi',
     ];
 
     protected $casts = [
-        'file' => 'array', // Otomatis convert JSON <-> Array
+        'file' => 'array',
         'tgl_upload' => 'date',
+        'file_revisi' => 'array',
     ];
 
 

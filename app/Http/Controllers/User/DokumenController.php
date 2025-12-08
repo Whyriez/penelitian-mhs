@@ -21,20 +21,31 @@ class DokumenController extends Controller
 
     public function storeUpload(Request $request)
     {
-        // 1. Validasi
         $request->validate([
             'nama-dokumen' => 'required|string|max:255',
-            'tanggal-upload' => 'required|date',
-            'deskripsi' => 'required|string',
-            // Validasi Array Dokumen
+            'nama-lembaga'      => 'required|string|max:255',
+            'tempat-penelitian' => 'required|string|max:255',
+            'nomor-surat'       => 'required|string|max:100',
+            'tgl-surat'         => 'required|date',
             'dokumen' => 'required|array',
-            'dokumen.*' => 'required|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:5120', // Max 5MB per file
+            'dokumen.*' => 'required|file|mimes:pdf|max:5120',
         ], [
+            'nama-dokumen.required' => 'Pengajuan wajib diisi.',
+            'nama-dokumen.string'   => 'Pengajuan harus berupa teks.',
+            'nama-dokumen.max'      => 'Pengajuan tidak boleh lebih dari 255 karakter.',
+            'nama-lembaga.required'      => 'Nama lembaga wajib diisi.',
+            'tempat-penelitian.required' => 'Tempat penelitian wajib diisi.',
+            'nomor-surat.required'       => 'Nomor surat wajib diisi.',
+            'tgl-surat.required'         => 'Tanggal surat wajib diisi.',
+            'dokumen.required' => 'Minimal harus ada satu file dokumen yang diunggah.',
+            'dokumen.array'    => 'Format dokumen tidak valid.',
             'dokumen.*.required' => 'File ini wajib diunggah.',
-            'dokumen.*.mimes' => 'Format file harus PDF, DOC, atau Gambar.',
+            'dokumen.*.file'     => 'File ini tidak valid.',
+            'dokumen.*.mimes'    => 'Format file harus PDF',
+            'dokumen.*.max'      => 'Ukuran file tidak boleh lebih dari 5 MB.',
         ]);
 
-        // Cek kelengkapan (Hard validation optional, karena sudah ada 'required' di array validation)
+        // Cek kelengkapan (Optional validation)
         foreach ($this->requiredDocs as $key) {
             if (!$request->hasFile("dokumen.$key")) {
                 return back()->withInput()->withErrors(["dokumen.$key" => "Dokumen ini wajib diisi!"]);
@@ -46,30 +57,29 @@ class DokumenController extends Controller
 
             // 2. Loop dan Upload setiap file
             foreach ($request->file('dokumen') as $key => $file) {
-                // Nama file unik: time_jenis_originalName
                 $filename = time() . '_' . $key . '.' . $file->getClientOriginalExtension();
-
-                // Store file
                 $path = $file->storeAs('dokumen_arsip/' . Auth::id(), $filename, 'public');
-
-                // Simpan path ke array temporary
                 $filePaths[$key] = $path;
             }
 
-            // 3. Simpan ke Database (Kolom file akan otomatis jadi JSON karena Casting di Model)
+            // 3. Simpan ke Database
             Arsip::create([
-                'user_id' => Auth::id(),
-                'nama' => $request->input('nama-dokumen'),
-                'deskripsi' => $request->input('deskripsi'),
-                'tgl_upload' => $request->input('tanggal-upload'),
-                'file' => $filePaths, // Array ini otomatis di-json_encode oleh Laravel
-                'status' => 'pending',
+                'user_id'           => Auth::id(),
+                'nama'              => $request->input('nama-dokumen'),
+                'nama_lembaga'      => $request->input('nama-lembaga'),
+                'tempat_penelitian' => $request->input('tempat-penelitian'),
+                'nomor_surat'       => $request->input('nomor-surat'),
+                'tgl_surat'         => $request->input('tgl-surat'),
+
+                'tgl_upload'        => $request->input('tanggal-upload'),
+                'file'              => $filePaths,
+                'status'            => 'pending',
             ]);
 
             return redirect()->route('user.riwayat')->with('success', 'Semua berkas berhasil diunggah!');
         } catch (\Exception $e) {
             Log::error('Upload Error: ' . $e->getMessage());
-            return back()->withInput()->with('error', 'Gagal menyimpan data.');
+            return back()->withInput()->with('error', 'Gagal menyimpan data: ' . $e->getMessage());
         }
     }
 
@@ -91,44 +101,41 @@ class DokumenController extends Controller
         }
 
         if (!in_array($arsip->status, ['pending', 'revisi', 'ditolak'])) {
-            return redirect()->route('user.riwayat')
-                ->with('error', 'Dokumen yang sudah divalidasi tidak dapat diubah.');
+            return redirect()->route('user.riwayat')->with('error', 'Dokumen valid tidak dapat diubah.');
         }
 
         $request->validate([
-            'nama' => 'required|string|max:255',
-            'deskripsi' => 'required|string',
-            'dokumen.*' => 'nullable|file|mimes:pdf,doc,docx,jpg,png|max:5120',
+            'nama'              => 'required|string|max:255',
+            'nama_lembaga'      => 'required|string|max:255',
+            'tempat_penelitian' => 'required|string|max:255',
+            'nomor_surat'       => 'required|string|max:100', // Validasi update
+            'tgl_surat'         => 'required|date',           // Validasi update
+            'dokumen.*'         => 'nullable|file|mimes:pdf,doc,docx,jpg,png|max:5120',
         ]);
 
         try {
             $arsip->nama = $request->nama;
-            $arsip->deskripsi = $request->deskripsi;
+            $arsip->nama_lembaga      = $request->nama_lembaga;
+            $arsip->tempat_penelitian = $request->tempat_penelitian;
+            $arsip->nomor_surat       = $request->nomor_surat;
+            $arsip->tgl_surat         = $request->tgl_surat;
 
-            // Ambil data file lama (Array)
-            $currentFiles = $arsip->file ?? []; 
+            $currentFiles = $arsip->file ?? [];
 
-            // Cek jika ada file baru yang diupload untuk mengganti yang lama
             if ($request->has('dokumen')) {
                 foreach ($request->file('dokumen') as $key => $file) {
-                    
-                    // Hapus file lama fisik jika ada update pada key tersebut
                     if (isset($currentFiles[$key]) && Storage::disk('public')->exists($currentFiles[$key])) {
                         Storage::disk('public')->delete($currentFiles[$key]);
                     }
-
-                    // Upload file baru
                     $filename = time() . '_' . $key . '.' . $file->getClientOriginalExtension();
                     $path = $file->storeAs('dokumen_arsip/' . Auth::id(), $filename, 'public');
-
-                    // Update array path
                     $currentFiles[$key] = $path;
                 }
             }
 
-            $arsip->file = $currentFiles; // Update kolom JSON
-            $arsip->status = 'pending'; // Reset status jadi pending setelah revisi
-            $arsip->catatan_revisi = null; // Clear catatan revisi
+            $arsip->file = $currentFiles;
+            $arsip->status = 'pending';
+            $arsip->catatan_revisi = null;
             $arsip->save();
 
             return redirect()->route('user.riwayat')->with('success', 'Dokumen revisi berhasil dikirim.');
