@@ -192,7 +192,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7">
                                 </path>
                             </svg>
-                            <span class="text-xs sm:text-sm">Pastikan dokumen dalam format PDF, DOC, atau DOCX</span>
+                            <span class="text-xs sm:text-sm">Pastikan dokumen dalam format PDF</span>
                         </li>
                         <li class="flex items-start">
                             <svg class="w-4 h-4 sm:w-5 sm:h-5 text-green-500 mr-2 mt-0.5" fill="none"
@@ -200,7 +200,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7">
                                 </path>
                             </svg>
-                            <span class="text-xs sm:text-sm">Maksimal ukuran file 10MB</span>
+                            <span class="text-xs sm:text-sm">Maksimal ukuran file 5MB</span>
                         </li>
                         <li class="flex items-start">
                             <svg class="w-4 h-4 sm:w-5 sm:h-5 text-green-500 mr-2 mt-0.5" fill="none"
@@ -255,7 +255,7 @@
         transform: translateY(-2px);
         transition: all 0.2s ease-in-out;
     }
-    
+
     .status-badge {
         display: inline-flex;
         align-items: center;

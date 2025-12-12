@@ -52,8 +52,8 @@
 
                                     <option value="" disabled {{ old('nama-dokumen') ? '' : 'selected' }}>-- Silahkan Pilih --</option>
 
-                                    <option value="Penelitian Mahasiswa" {{ old('nama-dokumen') == 'Penelitian Mahasiswa' ? 'selected' : '' }}>
-                                        Penelitian Mahasiswa
+                                    <option value="Izin Penelitian Mahasiswa" {{ old('nama-dokumen') == 'Izin Penelitian Mahasiswa' ? 'selected' : '' }}>
+                                        Izin Penelitian Mahasiswa
                                     </option>
                                 </select>
 
