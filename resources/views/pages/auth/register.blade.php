@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Daftar - Sistem Arsip Penelitian Mahasiswa</title>
+    <title>Daftar - Sistem Arsip Izin Penelitian Mahasiswa</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap"
         rel="stylesheet" />
@@ -209,10 +209,10 @@
                             stroke-linecap="round" stroke-linejoin="round" />
                     </svg>
                 </div>
-                <h2 class="text-xl font-semibold mb-3">Arsip Penelitian Terpusat</h2>
+                <h2 class="text-xl font-semibold mb-3">Arsip Izin Penelitian Mahasiswa</h2>
                 <p class="text-blue-100 leading-relaxed text-sm">
-                    Platform digital untuk mengelola, menyimpan, dan mengakses arsip penelitian
-                    mahasiswa secara terstruktur dan aman.
+                    Platform digital untuk mengelola, menyimpan, dan mengakses arsip izin penelitian
+                    mahasiswa di DPMPTSP Bone Bolango.
                 </p>
             </div>
         </div>
@@ -228,7 +228,7 @@
                         </svg>
                     </div>
                     <h1 id="system-title" class="text-xl font-bold text-gray-900 mb-1 compact-title">
-                        Sistem Arsip Penelitian Mahasiswa
+                        Sistem Arsip Izin Penelitian Mahasiswa
                     </h1>
                     <p id="welcome-text" class="text-gray-600 text-sm">
                         Silakan mendaftar untuk membuat akun baru
@@ -385,9 +385,9 @@
 
                 <div class="text-center mt-4 text-xs text-gray-500 fade-in compact-footer">
                     <p>
-                        © 2025 <span id="institution-name">Fakultas Ilmu Komputer - Universitas Contoh</span>
+                        © 2025 <span id="institution-name">Jurusan Teknik Informatika - Universitas Negeri Gorontalo</span>
                     </p>
-                    <p class="mt-1">Sistem Arsip Penelitian Mahasiswa v2.0</p>
+                    <p class="mt-1">Sistem Arsip Izin Penelitian Mahasiswa</p>
                 </div>
             </div>
         </div>

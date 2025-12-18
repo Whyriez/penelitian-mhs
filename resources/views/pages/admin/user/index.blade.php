@@ -47,6 +47,7 @@
                                 <option value="admin" {{ ($filters['role'] ?? '') == 'admin' ? 'selected' : '' }}>Admin</option>
                                 <option value="operator" {{ ($filters['role'] ?? '') == 'operator' ? 'selected' : '' }}>Operator</option>
                                 <option value="user" {{ ($filters['role'] ?? '') == 'user' ? 'selected' : '' }}>User</option>
+                                <option value="pengawas" {{ ($filters['role'] ?? '') == 'pengawas' ? 'selected' : '' }}>Pengawas</option>
                             </select>
                         </div>
                     </div>
@@ -101,6 +102,7 @@
                                             $roleMap = [
                                                 'admin' => ['text' => 'Admin', 'class' => 'bg-purple-100 text-purple-800'],
                                                 'operator' => ['text' => 'Operator', 'class' => 'bg-blue-100 text-blue-800'],
+                                                'pengawas' => ['text' => 'Pengawas', 'class' => 'bg-cyan-100 text-cyan-800'],
                                                 'user' => ['text' => 'User', 'class' => 'bg-gray-100 text-gray-800']
                                             ];
                                             $r = $roleMap[$user->role] ?? ['text' => $user->role, 'class' => 'bg-gray-100 text-gray-800'];
@@ -113,7 +115,7 @@
                                     <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-sm font-medium">
                                         <div class="flex space-x-3">
                                             <a href="{{ route('admin.users.edit', $user) }}" class="text-blue-600 hover:text-blue-900">Edit</a>
-                                            
+
                                             <form action="{{ route('admin.users.destroy', $user) }}" method="POST"
                                                   onsubmit="return confirm('Apakah Anda yakin ingin menghapus user {{ $user->name }}? Tindakan ini tidak dapat dibatalkan.');">
                                                 @csrf
@@ -154,7 +156,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
     </style>
-    
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const roleFilter = document.getElementById('role-filter');

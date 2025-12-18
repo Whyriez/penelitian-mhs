@@ -10,16 +10,6 @@
                         <h2 class="text-xl sm:text-2xl font-bold mb-2">Selamat Datang, {{ $user->name ?? 'User' }}!</h2>
                         <p class="text-sky-100 text-sm sm:text-base">Pantau status dokumen Anda secara real-time di dashboard ini.</p>
                     </div>
-                    <div>
-                        <a href="{{ route('user.upload') }}"
-                            class="inline-flex items-center px-4 py-2 bg-white text-sky-600 font-medium rounded-lg hover:bg-sky-50 transition-colors text-sm sm:text-base">
-                            <svg class="w-4 h-4 sm:w-5 sm:h-5 mr-2" fill="none" stroke="currentColor" viewbox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                            </svg>
-                            Upload Dokumen Baru
-                        </a>
-                    </div>
                 </div>
             </div>
 

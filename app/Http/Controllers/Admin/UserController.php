@@ -46,7 +46,8 @@ class UserController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'role' => ['required', Rule::in(['admin', 'operator', 'user'])],
+            // UPDATE DI SINI: Tambahkan 'pengawas'
+            'role' => ['required', Rule::in(['admin', 'operator', 'user', 'pengawas'])],
             'password' => 'required|string|min:8',
         ]);
 
@@ -73,10 +74,12 @@ class UserController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
-            'role' => ['required', Rule::in(['admin', 'operator', 'user'])],
+            // UPDATE DI SINI: Tambahkan 'pengawas'
+            'role' => ['required', Rule::in(['admin', 'operator', 'user', 'pengawas'])],
             'password' => 'nullable|string|min:8',
         ]);
 
+        // ... logic update (sama seperti sebelumnya) ...
         $user->name = $validated['name'];
         $user->email = $validated['email'];
         $user->role = $validated['role'];

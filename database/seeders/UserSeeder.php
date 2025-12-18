@@ -30,6 +30,13 @@ class UserSeeder extends Seeder
                 'role' => 'operator'
             ],
             [
+                'name' => 'Pengawas',
+                'email' => 'pengawas@gmail.com',
+                'nim' => null,
+                'password' => Hash::make('123'),
+                'role' => 'pengawas'
+            ],
+            [
                 'name' => 'user',
                 'email' => 'user@gmail.com',
                 'nim' => '12345678',

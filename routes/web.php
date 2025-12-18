@@ -17,6 +17,12 @@ Route::post('/login', [AuthController::class, 'login_process'])->name('login.pro
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::group(['middleware' => ['auth']], function () {
+    //? Pengawas
+    Route::middleware(['cekrole:pengawas'])->group(function () {
+        Route::get('/pengawas/rekapan', [\App\Http\Controllers\Pengawas\PengawasController::class, 'index'])->name('pengawas.index');
+        Route::get('/pengawas/rekapan/export', [\App\Http\Controllers\Pengawas\PengawasController::class, 'export'])->name('pengawas.export');
+    });
+
     //? Admin
     Route::middleware(['cekrole:admin'])->group(function () {
         Route::resource('admin', AdminController::class)->names('admin');

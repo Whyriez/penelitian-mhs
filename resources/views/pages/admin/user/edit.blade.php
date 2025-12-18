@@ -50,6 +50,7 @@
                             <option value="user" {{ old('role', $user->role) == 'user' ? 'selected' : '' }}>User</option>
                             <option value="operator" {{ old('role', $user->role) == 'operator' ? 'selected' : '' }}>Operator</option>
                             <option value="admin" {{ old('role', $user->role) == 'admin' ? 'selected' : '' }}>Admin</option>
+                            <option value="pengawas" {{ old('role', $user->role) == 'pengawas' ? 'selected' : '' }}>Pengawas</option>
                         </select>
                     </div>
 
