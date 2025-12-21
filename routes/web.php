@@ -63,7 +63,7 @@ Route::group(['middleware' => ['auth']], function () {
             // Riwayat & Edit
             Route::get('/riwayat-dokumen', [App\Http\Controllers\User\UserController::class, 'indexRiwayat'])->name('user.riwayat');
             Route::get('/dokumen/{arsip}/edit', [App\Http\Controllers\User\DokumenController::class, 'edit'])->name('user.dokumen.edit');
-            Route::patch('/dokumen/{arsip}', [App\Http\Controllers\User\DokumenController::class, 'update'])->name('user.dokumen.update');
+            Route::put('/dokumen/{arsip}', [App\Http\Controllers\User\DokumenController::class, 'update'])->name('user.dokumen.update');
         });
     });
 
