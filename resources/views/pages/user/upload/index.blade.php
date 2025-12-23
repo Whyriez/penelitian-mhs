@@ -55,6 +55,9 @@
                                     <option value="Izin Penelitian Mahasiswa" {{ old('nama-dokumen') == 'Izin Penelitian Mahasiswa' ? 'selected' : '' }}>
                                         Izin Penelitian Mahasiswa
                                     </option>
+                                    <option value="Penelitian Kelompok" {{ old('nama-dokumen') == 'Penelitian Kelompok' ? 'selected' : '' }}>
+                                        Penelitian Kelompok
+                                    </option>
                                 </select>
 
                                 @error('nama-dokumen')

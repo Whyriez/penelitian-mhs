@@ -68,7 +68,11 @@ class PengawasController extends Controller
     public function export(Request $request)
     {
         $timestamp = date('d-m-Y_H-i');
-        // Pastikan Export class Anda support filter tabel 'arsip'
-        return Excel::download(new DokumenMasukExport($request->all()), "Rekapan_Penelitian_Valid_$timestamp.xlsx");
+
+        // Panggil Export dengan parameter kedua: nama view khusus pengawas
+        return Excel::download(
+            new DokumenMasukExport($request->all(), 'exports.laporan_pengawas'),
+            "Rekapan_Penelitian_Valid_$timestamp.xlsx"
+        );
     }
 }

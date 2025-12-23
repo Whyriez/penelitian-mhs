@@ -13,10 +13,13 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 class DokumenMasukExport implements FromView, ShouldAutoSize, WithStyles
 {
     protected $request;
+    protected $viewName; // Tambahkan properti untuk nama view
 
-    public function __construct($request)
+    // Tambahkan parameter $viewName dengan default value
+    public function __construct($request, $viewName = 'exports.laporan_peneliti')
     {
         $this->request = $request;
+        $this->viewName = $viewName;
     }
 
     public function view(): View
@@ -35,11 +38,6 @@ class DokumenMasukExport implements FromView, ShouldAutoSize, WithStyles
             });
         }
 
-        // HAPUS filter status dari request, karena kita memaksa hanya ambil yang 'valid'
-        // if (isset($this->request['status']) && $this->request['status'] != null) {
-        //     $query->where('status', $this->request['status']);
-        // }
-
         // --- Filter Tanggal ---
         if (isset($this->request['date_from']) && $this->request['date_from'] != null) {
             $query->whereDate('created_at', '>=', $this->request['date_from']);
@@ -56,7 +54,8 @@ class DokumenMasukExport implements FromView, ShouldAutoSize, WithStyles
         $dateFrom = $this->request['date_from'] ?? date('Y-m-d');
         $carbonDate = Carbon::parse($dateFrom);
 
-        return view('exports.laporan_peneliti', [
+        // GUNAKAN $this->viewName di sini
+        return view($this->viewName, [
             'data'  => $query->get(),
             'bulan' => $carbonDate->translatedFormat('F'),
             'tahun' => $carbonDate->format('Y'),
